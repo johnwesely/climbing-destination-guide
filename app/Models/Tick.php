@@ -18,4 +18,10 @@ class Tick extends Model
     {
         return $this->belongsTo(Route::class);
     }
+
+    public function type()
+    {
+        return $this->belongsTo(SendType::class);
+    }
+
 }

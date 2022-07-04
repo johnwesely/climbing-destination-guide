@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->text('description');
-            $table->text('directions');
-            $table->string('lat');
-            $table->string('lon');
+            $table->text('description')->nullable();
+            $table->text('directions')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lon')->nullable();
         });
 
         Schema::create('crags', function (Blueprint $table) {
@@ -28,43 +28,52 @@ return new class extends Migration
             $table->foreignId('region_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->string('name');
-            $table->text('description');
-            $table->text('directions');
-            $table->string('lat');
-            $table->string('lon');
+            $table->text('description')->nullable();
+            $table->text('directions')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lon')->nullable();
         });
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('crag_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->string('name');
-            $table->text('description');
-            $table->text('directions');
-            $table->string('lat');
-            $table->string('lon');
+            $table->text('description')->nullable();
+            $table->text('directions')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lon')->nullable();
         });
 
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('section_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+            $table->integer('order');
             $table->string('name');
-            $table->text('description');
-            $table->text('location');
-            $table->integer('height');
+            $table->text('description')->nullable();
+            $table->integer('rating')->nullable();
+            $table->text('location')->nullable();
+            $table->integer('height')->nullable();
             $table->integer('draws')->nullable();
             $table->string('protection')->nullable();
             $table->string('fa')->nullable();
             $table->integer('fa_year')->nullable();
-            $table->foreignId('type');
+            $table->foreignId('type_id');
+            $table->foreignId('grade_id');
         });
 
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('commentable_id')->constrained()->cascadeOnDelete();
+            $table->morphs('commentable_id');
             $table->string('commentable_type');
             $table->foreignId('user_id');
+        });
+
+        Schema::create('types', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name');
         });
 
         Schema::create('ticks', function (Blueprint $table) {
@@ -74,6 +83,13 @@ return new class extends Migration
             $table->foreignId('send_type_id');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('route_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('grade_id');
+        });
+
+        Schema::create('send_type', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name');
         });
 
         Schema::create('images', function (Blueprint $table) {
@@ -135,6 +151,20 @@ return new class extends Migration
             $table->foreignId('route_tag_id')->constrained()->cascadeOnDelete();
         });
 
+        Schema::create('grades', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('type_id');
+            $table->string('us');
+            $table->string('french')->nullable();
+            $table->integer('points');
+        });
+
+        Schema::create('type', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name');
+        });
     }
 
     /**

@@ -29,4 +29,9 @@ class Route extends Model
         return $this->hasMany(Tick::class);
     }
 
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
 }
